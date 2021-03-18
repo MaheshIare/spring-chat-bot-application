@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ChatMessage {
 	
+	private static final String DEFAULT_MSG = "Welcome to the chat, ";
 	private MessageType messageType;
 	private String content;
 	private String sender;
@@ -40,7 +41,7 @@ public class ChatMessage {
 	 * @return the content
 	 */
 	public String getContent() {
-		return StringUtils.isEmpty(content) ? StringUtils.EMPTY : content;
+		return StringUtils.isEmpty(content) ? DEFAULT_MSG +getSender()+" !!!": content;
 	}
 
 
