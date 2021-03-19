@@ -1,8 +1,6 @@
 package org.spring.chat.bot.model;
 
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,8 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ChatMessage {
 	
-	private static final String DEFAULT_MSG = "Welcome to the chat, ";
-	private MessageType messageType;
+	private MessageType type;
 	private String content;
 	private String sender;
 
@@ -22,8 +19,8 @@ public class ChatMessage {
 	/**
 	 * @return the messageType
 	 */
-	public MessageType getMessageType() {
-		return messageType;
+	public MessageType getType() {
+		return type;
 	}
 
 
@@ -31,8 +28,8 @@ public class ChatMessage {
 	/**
 	 * @param messageType the messageType to set
 	 */
-	public void setMessageType(MessageType messageType) {
-		this.messageType = messageType;
+	public void setType(MessageType type) {
+		this.type = type;
 	}
 
 
@@ -41,7 +38,7 @@ public class ChatMessage {
 	 * @return the content
 	 */
 	public String getContent() {
-		return StringUtils.isEmpty(content) ? DEFAULT_MSG +getSender()+" !!!": content;
+		return content;
 	}
 
 

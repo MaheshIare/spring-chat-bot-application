@@ -220,7 +220,7 @@ button.accent {
 
 #messageForm .input-group input {
     float: left;
-    width: calc(100% - 85px);
+    width: calc(100% - 180px);
 }
 
 #messageForm .input-group button {

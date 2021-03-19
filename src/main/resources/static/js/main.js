@@ -23,11 +23,23 @@ function connect(event) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
-        var socket = new SockJS('/ws');
+        var socket = new SockJS('/websocket');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
     }
+    event.preventDefault();
+}
+
+function disconnect(event) {
+    username = document.querySelector('#name').value.trim();
+    if(username) {
+        usernamePage.classList.remove('hidden');
+        chatPage.classList.add('hidden');
+		onDisconnected();
+        stompClient.disconnect();
+    }
+    document.querySelector('#name').value = '';
     event.preventDefault();
 }
 
@@ -40,6 +52,19 @@ function onConnected() {
     stompClient.send("/app/chat.addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
+    )
+
+    connectingElement.classList.add('hidden');
+}
+
+function onDisconnected() {
+    // Subscribe to the Public Topic
+    stompClient.subscribe('/topic/public', onMessageReceived);
+
+    // Tell your username to the server
+    stompClient.send("/app/chat.removeUser",
+        {},
+        JSON.stringify({sender: username, type: 'LEAVE'})
     )
 
     connectingElement.classList.add('hidden');
@@ -116,3 +141,4 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
+messageForm.addEventListener('reset', disconnect, true)
