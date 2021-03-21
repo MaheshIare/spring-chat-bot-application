@@ -28,7 +28,13 @@ function connect(event) {
 
         stompClient.connect({}, onConnected, onError);
     }
+    setUserDetails(username);
     event.preventDefault();
+}
+
+function setUserDetails(username){
+	document.querySelector('#username-span-title').textContent = 'You logged in as: ';
+	document.querySelector('#username-span').textContent = username;
 }
 
 function disconnect(event) {

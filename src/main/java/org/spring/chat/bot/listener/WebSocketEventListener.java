@@ -24,20 +24,22 @@ public class WebSocketEventListener {
 	private SimpMessageSendingOperations messagingTemplate;
 
 	@EventListener
-	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-		logger.info("Received a new web socket connection");
+	public void handleWebSocketConnectListener(SessionConnectedEvent sessionConnectedEvent) {
+		logger.info("Received a new web socket connection for a new user at {}",
+				new Date(sessionConnectedEvent.getTimestamp()));
 	}
 
 	@EventListener
-	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+	public void handleWebSocketDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
+		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionDisconnectEvent.getMessage());
 		String username = (String) headerAccessor.getSessionAttributes().get(ChatBotConstants.WEB_SOCKET_HDR_USER_KEY);
 		if (StringUtils.isNotBlank(username)) {
-			logger.info("{} got disconnected from chat at: {}", username, new Date(event.getTimestamp()));
+			logger.info("{} got disconnected from chat at: {}", username,
+					new Date(sessionDisconnectEvent.getTimestamp()));
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setType(ChatMessage.MessageType.LEAVE);
 			chatMessage.setSender(username);
-			chatMessage.setContent(username +" left!");
+			chatMessage.setContent(username + " left!");
 			messagingTemplate.convertAndSendToUser(username, ChatBotConstants.WEB_SOCKET_TOPIC_PATH, chatMessage);
 		} else {
 			logger.warn("Something went wrong while disconnecting the user from chat");
